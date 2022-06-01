@@ -1,7 +1,18 @@
 import React from 'react'
 import './deleteRecordComponent.css';
+import { axiosInstance } from '../../config';
+import { useEffect, useState } from 'react';
 
 const DeleteRecordComponent = (props) => {
+
+    const deleteRecord = async()=>{
+        try{
+          const res = await axiosInstance.delete(`/api/delete/${props.id}`);
+          props.closeModal();
+        }catch(err){
+          console.log("ErrodDeletingRecord",err);
+        }
+      }
   return (
     <div className='deleteComponent'>
         <div className="deleteContainer">
@@ -15,7 +26,7 @@ const DeleteRecordComponent = (props) => {
             </div>
             <div className='part3'> 
                 <button onClick={(e)=>props.closeModal()} className='cancelButton'>Cancel</button>
-                <button className='deleteButton'>Delete</button>
+                <button onClick={deleteRecord} className='deleteButton'>Delete</button>
             </div>
         </div>
     </div>

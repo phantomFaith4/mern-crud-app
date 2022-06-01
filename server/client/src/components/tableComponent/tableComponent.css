@@ -13,7 +13,7 @@ td{
 .tableDiv{
     display: flex;
     align-items: center;
-    height: 50vh;
+    height: 53vh;
     flex-direction: column;
 }
 .tableTitleDiv{
@@ -57,9 +57,12 @@ td{
     border: 0;
     cursor: pointer;
     border-radius: 10px;
+    
 }
 .deleteButtonTable:hover{
     background-color: #f10000;
+    transform: scale(1.05);
+    transition: transform 0.4s;
 }
 .addButtonTable{
     width: 150px;
@@ -73,6 +76,8 @@ td{
 }
 .addButtonTable:hover{
     background-color: #1a7c48;
+    transform: scale(1.05);
+    transition: transform 0.4s;
 }
 .buttonHolder{
     flex: 1;
@@ -85,4 +90,23 @@ td{
 }
 .titleH1{
     margin-left: 25px;
+}
+.switchPageButton{
+    width:35px;
+    height:35px;
+    background-color: #1C6DD0;
+    border:0;
+    margin:10px;
+    cursor:pointer;
+    border-radius:5px;
+}
+.switchPageButton:hover{
+    transform: scale(1.2);
+    transition: transform 0.4s;
+    border:1px solid black;
+}
+
+tr:hover{
+    background-color: rgba(0,0,0,0.1);
+    cursor:pointer;
 }

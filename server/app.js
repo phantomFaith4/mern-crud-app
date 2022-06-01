@@ -32,8 +32,8 @@ app.post('/api/new', async(req,res)=>{
             address: req.body.address,
             phone: req.body.phone,
         });
-        newCrud.save();
-        res.status(200).json(newCrud);
+        const crud = await newCrud.save();
+        res.status(200).json(crud);
     }catch(err){
         res.status(500).json(err);
     }
@@ -43,8 +43,13 @@ app.put('/api/:id', async(req,res)=>{
 
 });
 
-app.delete('/api/:id', async(req,res)=>{
-
+app.delete('/api/delete/:id', async(req,res)=>{
+    try{
+        const del = await Crud.findByIdAndDelete(req.params.id);
+        res.status(200).json("Entry has been deleted")
+    }catch(err){
+        res.status(500).json(err);
+    }
 });
 
 app.listen(8000, ()=>{

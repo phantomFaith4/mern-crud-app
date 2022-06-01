@@ -16,10 +16,9 @@ const CrudSchema = new mongoose.Schema({
     },
     phone:{
         type:String,
-        type:String,
         required:true,
         unique:true,
-    }
-});
+    },
+},{timestamps:true});
 
 module.exports = mongoose.model('Crud',CrudSchema);

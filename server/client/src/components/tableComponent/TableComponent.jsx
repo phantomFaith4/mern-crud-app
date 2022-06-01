@@ -1,19 +1,28 @@
 import React from 'react'
 import './tableComponent.css';
+import TableFooter from './tableFooter/TableFooter';
 import Modal from 'react-modal';
 import { useState, useEffect } from 'react';
 import DeleteComponent from '../deleteRecordComponent/DeleteRecordComponent';
 import NewRecord from '../newRecordComponent/NewRecordComponent';
 import { axiosInstance } from '../../config';
+import useTable from './tableOperations';
+
 
 const TableComponent = () => {
   
   const [modalIsOpen, setIsOpen] = useState(false);
   const [switchM, setSwitchM] = useState(false);
+  const [id,setId] = useState('');
+  const [delArr, setDelArr] = useState([]);
   const [users,setUsers] = useState([]);
-  const  openModal = (s)=> {
+  const [page,setPage] = useState(1);
+  const rowsPerPage = 4;
+  const {slice,range} = useTable(users,page,rowsPerPage);
+  const  openModal = (s,id)=> {
     setIsOpen(true);
     setSwitchM(s);
+    setId(id)
   }
   const closeModal = (s)=> {
     setIsOpen(false); 
@@ -22,10 +31,11 @@ const TableComponent = () => {
     const fetch = async()=>{
       const res = await axiosInstance.get('/api/all');
       setUsers(res.data);
-      console.log("sdsd")
     };
     fetch();
-  },[]);
+    console.log('page',page,"---","rows",rowsPerPage,"-----","sliceRange",slice,"Rng",range);
+  },[modalIsOpen]);
+
   return (
     <div className='tableDiv'>
       <div className='tableTitleDiv'>
@@ -37,7 +47,7 @@ const TableComponent = () => {
             <button onClick={(e)=>openModal(true)} className='addButtonTable'>ADD NEW</button>
             <Modal isOpen={modalIsOpen} overlayClassName="Overlay" onRequestClose={closeModal} className="Modal">
               {
-                switchM ? (<NewRecord closeModal={closeModal}/>) : (<DeleteComponent closeModal={closeModal} />)
+                switchM ? (<NewRecord closeModal={closeModal}/>) : (<DeleteComponent id={id} closeModal={closeModal} />)
               }
             </Modal>
         </div>
@@ -60,7 +70,7 @@ const TableComponent = () => {
       </thead>
       <tbody>
         {
-          users.map(u=>
+          slice.map(u=>
           (
             <>
                <tr>
@@ -76,7 +86,7 @@ const TableComponent = () => {
                 <td>{u.phone}</td>
                 <td className='iconHolder'>
                   <i className="iconEdit fa-solid fa-pen"></i>
-                  <i className="iconDelete fa-solid fa-trash"></i>
+                  <i onClick={(e)=>openModal(false,u._id)} className="iconDelete fa-solid fa-trash"></i>
                 </td>
               </tr>
             </>
@@ -85,6 +95,7 @@ const TableComponent = () => {
         }
       </tbody>
     </table>
+    <TableFooter range={range} slice={slice} setPage={setPage} page={page} />
     </div> 
   )
 }
