@@ -18,7 +18,6 @@ app.get('/api/all', async(req,res)=>{
     try{
         const allCrud = await Crud.find();
         res.status(200).json(allCrud);
-        console.log(allCrud);
     }catch(err){
         res.status(500).json(err);
     }

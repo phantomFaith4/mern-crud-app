@@ -7,19 +7,24 @@ import DeleteComponent from '../deleteRecordComponent/DeleteRecordComponent';
 import NewRecord from '../newRecordComponent/NewRecordComponent';
 import { axiosInstance } from '../../config';
 import useTable from './tableOperations';
-
+import ReactDOM from 'react-dom'
 
 const TableComponent = () => {
   
   const [modalIsOpen, setIsOpen] = useState(false);
   const [switchM, setSwitchM] = useState(false);
   const [id,setId] = useState('');
-  const [delArr, setDelArr] = useState([]);
   const [users,setUsers] = useState([]);
   const [page,setPage] = useState(1);
   const rowsPerPage = 4;
   const {slice,range} = useTable(users,page,rowsPerPage);
-  const  openModal = (s,id)=> {
+  const [deleteArray, setDeleteArray] = useState([]);
+  const [isCheckAll, setIsCheckAll] = useState(false);
+
+  const addEntryClick = (id,check) => {
+    setDeleteArray(oldArray => [...oldArray, id]);
+  };
+  const openModal = (s,id)=> {
     setIsOpen(true);
     setSwitchM(s);
     setId(id)
@@ -33,9 +38,21 @@ const TableComponent = () => {
       setUsers(res.data);
     };
     fetch();
-    console.log('page',page,"---","rows",rowsPerPage,"-----","sliceRange",slice,"Rng",range);
-  },[modalIsOpen]);
+    console.log("theArray=>",deleteArray);
+  },[modalIsOpen,isCheckAll]);
 
+  const test = ()=>{
+      setIsCheckAll(!isCheckAll);
+      setDeleteArray(slice);
+      const checkboxes = document.querySelectorAll('input[type=checkbox]');
+      for (const checkbox of checkboxes){
+        if(checkbox.checked){
+          checkbox.checked = false;
+        }else{
+          checkbox.checked = true;
+        }
+      }
+  };
   return (
     <div className='tableDiv'>
       <div className='tableTitleDiv'>
@@ -47,7 +64,7 @@ const TableComponent = () => {
             <button onClick={(e)=>openModal(true)} className='addButtonTable'>ADD NEW</button>
             <Modal isOpen={modalIsOpen} overlayClassName="Overlay" onRequestClose={closeModal} className="Modal">
               {
-                switchM ? (<NewRecord closeModal={closeModal}/>) : (<DeleteComponent id={id} closeModal={closeModal} />)
+                switchM ? (<NewRecord closeModal={closeModal}/>) : (<DeleteComponent multi={deleteArray} id={id} closeModal={closeModal} />)
               }
             </Modal>
         </div>
@@ -57,7 +74,7 @@ const TableComponent = () => {
         <tr className='columnTitleDiv'>
           <th className='checkboxHolder firstRow'>
             <span className="custom-checkbox">
-                <input type="checkbox" id="selectAll" />
+                <input onClick={test} checked={isCheckAll} type="checkbox" id="selectAll" />
                 <label htmlFor="selectAll"></label>
             </span>
           </th>
@@ -73,10 +90,10 @@ const TableComponent = () => {
           slice.map(u=>
           (
             <>
-               <tr>
+               <tr key={u._id}>
                 <td className='checkboxHolder'>
                   <span className="customCheckbox">
-                      <input type="checkbox"/>
+                      <input onClick={(e)=>addEntryClick(u._id)} className='chcBox' type="checkbox"  />
                       <label htmlFor="checkbox1"></label>
                     </span>
                 </td>

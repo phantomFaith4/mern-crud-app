@@ -7,12 +7,18 @@ const DeleteRecordComponent = (props) => {
 
     const deleteRecord = async()=>{
         try{
-          const res = await axiosInstance.delete(`/api/delete/${props.id}`);
+          if(props.multi.length < 1){
+            const res = await axiosInstance.delete(`/api/delete/${props.id}`);
+          }else{
+            for(const id of props.multi){
+              const res = await axiosInstance.delete(`/api/delete/${id}`);
+            }
+          }
           props.closeModal();
         }catch(err){
           console.log("ErrodDeletingRecord",err);
         }
-      }
+    };
   return (
     <div className='deleteComponent'>
         <div className="deleteContainer">
