@@ -1,2 +1,2 @@
 #
-Simple CRUD app builded using MERN stack
+Simple CRUD app built using MERN stack

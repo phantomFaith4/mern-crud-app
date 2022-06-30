@@ -8,10 +8,11 @@ import NewRecord from '../newRecordComponent/NewRecordComponent';
 import { axiosInstance } from '../../config';
 import useTable from './tableOperations';
 import ReactDOM from 'react-dom'
-
+import EditRecord from '../editRecordComponent/EditRecordComponent';
 const TableComponent = () => {
   
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [modalIsOpen2, setIsOpen2] = useState(false);
   const [switchM, setSwitchM] = useState(false);
   const [id,setId] = useState('');
   const [users,setUsers] = useState([]);
@@ -32,14 +33,20 @@ const TableComponent = () => {
   const closeModal = (s)=> {
     setIsOpen(false); 
   }
+  const openModal2 = (s,id)=> {
+    setIsOpen2(true);
+    setId(id)
+  }
+  const closeModal2 = (s)=> {
+    setIsOpen2(false); 
+  }
   useEffect(()=>{
     const fetch = async()=>{
       const res = await axiosInstance.get('/api/all');
       setUsers(res.data);
     };
     fetch();
-    console.log("theArray=>",deleteArray);
-  },[modalIsOpen,isCheckAll]);
+  },[modalIsOpen,modalIsOpen2,isCheckAll]);
 
   const test = ()=>{
       setIsCheckAll(!isCheckAll);
@@ -66,6 +73,9 @@ const TableComponent = () => {
               {
                 switchM ? (<NewRecord closeModal={closeModal}/>) : (<DeleteComponent multi={deleteArray} id={id} closeModal={closeModal} />)
               }
+            </Modal>
+            <Modal isOpen={modalIsOpen2} overlayClassName="Overlay" onRequestClose={closeModal2} className="Modal">
+              <EditRecord closeModal={closeModal2} id={id} />
             </Modal>
         </div>
       </div>
@@ -102,7 +112,7 @@ const TableComponent = () => {
                 <td>{u.address}</td>
                 <td>{u.phone}</td>
                 <td className='iconHolder'>
-                  <i className="iconEdit fa-solid fa-pen"></i>
+                  <i onClick={(e)=>openModal2(false,u._id)} className="iconEdit fa-solid fa-pen"></i>
                   <i onClick={(e)=>openModal(false,u._id)} className="iconDelete fa-solid fa-trash"></i>
                 </td>
               </tr>
