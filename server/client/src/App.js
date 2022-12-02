@@ -6,7 +6,7 @@ function App() {
     <div className="App">
       <div className='appContainer'>
         <div className='appTitle'>
-          <h1 className='appTitleH1'>Simple CRUD App</h1>
+          <h1 className='appTitleH1'>Simple CRUD App React</h1>
         </div>
         <div className='appData'>
           <TableComponent />
